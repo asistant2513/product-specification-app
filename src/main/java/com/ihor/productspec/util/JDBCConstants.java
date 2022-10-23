@@ -39,4 +39,10 @@ public final class JDBCConstants {
             "INNER JOIN main_products AS MP " +
             "ON PS.source_product_id = MP.product_id " +
             "WHERE PS.target_product_id = '%s';";
+
+    public static final String ADD_PRODUCT_TYPE_RECORD = "INSERT INTO product_types (type_id, type_name) VALUES (?, '?');";
+
+    public static final String UPDATE_PRODUCT_TYPE_RECORD = "UPDATE product_types SET type_name = ? WHERE type_id = ?;";
+
+    public static final String DELETE_PRODUCT_TYPE_RECORD = "DELETE FROM product_types WHERE type_id = ?;";
 }

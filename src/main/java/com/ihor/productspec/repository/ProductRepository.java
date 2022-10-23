@@ -53,8 +53,8 @@ public class ProductRepository implements SQLiteRepository<Product, String> {
     }
 
     @Override
-    public String addOne(Product item) {
-        return null;
+    public int addOne(Product item) {
+        return 0;
     }
 
     @Override
@@ -63,12 +63,12 @@ public class ProductRepository implements SQLiteRepository<Product, String> {
     }
 
     @Override
-    public String deleteOne(Product item) {
-        return null;
+    public int deleteOne(Product item) {
+        return 0;
     }
 
     @Override
-    public void deleteAll(List<Product> items) {
-
+    public int deleteOneByID(String s) {
+        return 0;
     }
 }

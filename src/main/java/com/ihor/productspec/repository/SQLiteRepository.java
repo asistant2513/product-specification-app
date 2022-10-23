@@ -8,12 +8,11 @@ public interface SQLiteRepository <T, ID> {
 
     T getOneByID(final ID id);
 
-    ID addOne(final T item);
+    int addOne(final T item);
 
     T update(final T item);
 
-    ID deleteOne(final T item);
+    int deleteOne(final T item);
 
-    void deleteAll(final List<T> items);
-
+    int deleteOneByID(final ID id);
 }

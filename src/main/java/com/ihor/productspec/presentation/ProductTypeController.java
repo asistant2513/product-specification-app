@@ -27,7 +27,7 @@ public class ProductTypeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductType> getById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ProductType> getById(@PathVariable("id") Long id) {
         var result = repository.getOneByID(id);
         return ResponseEntity.ok(result);
     }

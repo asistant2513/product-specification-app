@@ -45,8 +45,8 @@ public class SpecificationRepository implements SQLiteRepository<Specification, 
     }
 
     @Override
-    public String addOne(Specification item) {
-        return null;
+    public int addOne(Specification item) {
+        return 0;
     }
 
     @Override
@@ -55,12 +55,12 @@ public class SpecificationRepository implements SQLiteRepository<Specification, 
     }
 
     @Override
-    public String deleteOne(Specification item) {
-        return null;
+    public int deleteOne(Specification item) {
+        return 0;
     }
 
     @Override
-    public void deleteAll(List<Specification> items) {
-
+    public int deleteOneByID(String s) {
+        return 0;
     }
 }

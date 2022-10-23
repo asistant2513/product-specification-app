@@ -7,18 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
-import static com.ihor.productspec.util.JDBCConstants.SELECT_ALL_PRODUCT_TYPES;
-import static com.ihor.productspec.util.JDBCConstants.SELECT_ONE_PRODUCT_TYPE_BY_ID;
+import static com.ihor.productspec.util.JDBCConstants.*;
 
 @Repository
 @Slf4j
-public class ProductTypeRepository implements SQLiteRepository<ProductType, Integer> {
+public class ProductTypeRepository implements SQLiteRepository<ProductType, Long> {
 
     @Autowired
     private JDBCConnection connection;
@@ -40,7 +36,7 @@ public class ProductTypeRepository implements SQLiteRepository<ProductType, Inte
     }
 
     @Override
-    public ProductType getOneByID(Integer id) {
+    public ProductType getOneByID(Long id) {
         try (Connection c = connection.getConnection()) {
             Statement st = c.createStatement();
             ResultSet rs = st.executeQuery(String.format(SELECT_ONE_PRODUCT_TYPE_BY_ID, id));
@@ -53,22 +49,48 @@ public class ProductTypeRepository implements SQLiteRepository<ProductType, Inte
     }
 
     @Override
-    public Integer addOne(ProductType item) {
-        return null;
+    public int addOne(ProductType item) {
+        try (Connection c = connection.getConnection()) {
+            PreparedStatement st = c.prepareStatement(ADD_PRODUCT_TYPE_RECORD);
+            st.setLong(1, item.getTypeCode());
+            st.setString(2, item.getTypeName());
+            return st.executeUpdate();
+        }
+        catch (SQLException ex) {
+            log.error("Exception occurred during connection: {}", ex.getMessage());
+            return 0;
+        }
     }
 
     @Override
     public ProductType update(ProductType item) {
-        return null;
+        try (Connection c = connection.getConnection()) {
+            PreparedStatement st = c.prepareStatement(UPDATE_PRODUCT_TYPE_RECORD);
+            st.setString(1, item.getTypeName());
+            st.setLong(2, item.getTypeCode());
+            return item;
+        }
+        catch (SQLException ex) {
+            log.error("Exception occurred during connection: {}", ex.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public Integer deleteOne(ProductType item) {
-        return null;
+    public int deleteOne(ProductType item) {
+        return deleteOneByID(item.getTypeCode());
     }
 
     @Override
-    public void deleteAll(List<ProductType> items) {
-
+    public int deleteOneByID(Long id) {
+        try (Connection c = connection.getConnection()) {
+            PreparedStatement st = c.prepareStatement(DELETE_PRODUCT_TYPE_RECORD);
+            st.setLong(1, id);
+            return st.executeUpdate();
+        }
+        catch (SQLException ex) {
+            log.error("Exception occurred during connection: {}", ex.getMessage());
+            return 0;
+        }
     }
 }

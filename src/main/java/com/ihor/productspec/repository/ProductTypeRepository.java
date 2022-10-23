@@ -77,6 +77,7 @@ public class ProductTypeRepository implements SQLiteRepository<ProductType, Long
             PreparedStatement st = c.prepareStatement(UPDATE_PRODUCT_TYPE_RECORD);
             st.setString(1, item.getTypeName());
             st.setLong(2, item.getTypeCode());
+            st.executeUpdate();
             return item;
         }
         catch (SQLException ex) {

@@ -5,10 +5,7 @@ import com.ihor.productspec.repository.ProductTypeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +27,21 @@ public class ProductTypeController {
     public ResponseEntity<ProductType> getById(@PathVariable("id") Long id) {
         var result = repository.getOneByID(id);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping
+    public int add(@RequestBody final ProductType productType) {
+        return repository.addOne(productType);
+    }
+
+    @PatchMapping
+    public ResponseEntity<ProductType> update(@RequestBody final ProductType productType) {
+        var result = repository.update(productType);
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/{id}")
+    public int delete(@PathVariable("id") final Long id) {
+        return repository.deleteOneByID(id);
     }
 }

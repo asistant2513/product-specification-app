@@ -69,6 +69,7 @@ public class SpecificationRepository implements SQLiteRepository<Specification, 
             st.setLong(1, item.getQuantity());
             st.setString(2, item.getSourceProduct().getProductCode());
             st.setString(3, item.getTargetProduct().getProductCode());
+            st.executeUpdate();
             return item;
         }
         catch (SQLException ex) {

@@ -79,6 +79,7 @@ public class ProductRepository implements SQLiteRepository<Product, String> {
             st.setString(1, item.getProductName());
             st.setLong(2, item.getProductType().getTypeCode());
             st.setString(3, item.getProductCode());
+            st.executeUpdate();
             return item;
         }
         catch (SQLException ex) {

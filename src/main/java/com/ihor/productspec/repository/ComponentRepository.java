@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.ihor.productspec.util.JDBCConstants.SELECT_ALL_FIRST_LEVEL_NODE_COMPONENTS_BY_ID;

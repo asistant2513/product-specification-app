@@ -7,10 +7,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.util.List;
 
-import static com.ihor.productspec.util.JDBCConstants.*;
+import static com.ihor.productspec.util.JDBCConstants.SELECT_ALL_PRODUCT_TYPES;
+import static com.ihor.productspec.util.JDBCConstants.SELECT_ONE_PRODUCT_TYPE_BY_ID;
+import static com.ihor.productspec.util.JDBCConstants.ADD_PRODUCT_TYPE_RECORD;
+import static com.ihor.productspec.util.JDBCConstants.UPDATE_PRODUCT_TYPE_RECORD;
+import static com.ihor.productspec.util.JDBCConstants.DELETE_PRODUCT_TYPE_RECORD;
 
 @Repository
 @Slf4j

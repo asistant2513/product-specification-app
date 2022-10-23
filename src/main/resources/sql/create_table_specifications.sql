@@ -5,10 +5,10 @@ CREATE TABLE IF NOT EXISTS product_spec (
     PRIMARY KEY (source_product_id, target_product_id),
     FOREIGN KEY (source_product_id)
         REFERENCES products (product_id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE NO ACTION,
     FOREIGN KEY (target_product_id)
         REFERENCES products (product_id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );

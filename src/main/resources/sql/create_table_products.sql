@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS main_products (
     product_type_id INTEGER NOT NULL,
     FOREIGN KEY (product_type_id)
         REFERENCES product_types (type_id)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );

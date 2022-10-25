@@ -27,6 +27,7 @@ public final class DatabaseDataPreparationConfig {
                 String query = readInputStream(script);
                 if (!query.equals(Strings.EMPTY)) {
                     c.createStatement().execute(query);
+                    log.debug("SQL script '{}' executed successfully", script.getFilename());
                 }
             }
         }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
@@ -14,9 +15,14 @@ public class ProductSpecApplication {
 
 	public static void main(String[] args) {
 		var context = SpringApplication.run(ProductSpecApplication.class, args);
+		prepareDatabase(context);
+	}
+
+	private static void prepareDatabase(final ApplicationContext context){
 		try {
 			boolean isDBReady = Boolean.getBoolean(context.getEnvironment().getProperty("datasource.isReady"));
 			if (!isDBReady) {
+				log.info("Database preparation required. Starting DB configuration");
 				context.getBean(DatabaseDataPreparationConfig.class).prepareDatabase(context);
 			}
 		} catch (IOException exception) {

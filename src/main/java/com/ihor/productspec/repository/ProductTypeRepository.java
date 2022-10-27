@@ -47,8 +47,9 @@ public class ProductTypeRepository implements SQLiteRepository<ProductType, Long
     @Override
     public ProductType getOneByID(Long id) {
         try (Connection c = connection.getConnection()) {
-            Statement st = c.createStatement();
-            ResultSet rs = st.executeQuery(String.format(SELECT_ONE_PRODUCT_TYPE_BY_ID, id));
+            PreparedStatement st = c.prepareStatement(SELECT_ONE_PRODUCT_TYPE_BY_ID);
+            st.setLong(1, id);
+            ResultSet rs = st.executeQuery();
             return mapper.mapOne(rs);
         }
         catch (SQLException ex) {

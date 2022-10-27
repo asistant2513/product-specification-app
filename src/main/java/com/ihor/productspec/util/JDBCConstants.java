@@ -4,9 +4,9 @@ public final class JDBCConstants {
     /* -----# Product type queries section #----- */
     public static final String SELECT_ALL_PRODUCT_TYPES = "SELECT * FROM product_types;";
 
-    public static final String SELECT_ONE_PRODUCT_TYPE_BY_ID = "SELECT * FROM product_types AS PT WHERE PT.type_id = %s;";
+    public static final String SELECT_ONE_PRODUCT_TYPE_BY_ID = "SELECT * FROM product_types AS PT WHERE PT.type_id = ?;";
 
-    public static final String ADD_PRODUCT_TYPE_RECORD = "INSERT INTO product_types (type_id, type_name) VALUES ( ? , ?);";
+    public static final String ADD_PRODUCT_TYPE_RECORD = "INSERT INTO product_types (type_id, type_name) VALUES (?, ?);";
 
     public static final String UPDATE_PRODUCT_TYPE_RECORD = "UPDATE product_types SET type_name = ? WHERE type_id = ?;";
 
@@ -15,7 +15,7 @@ public final class JDBCConstants {
     /* -----# Product queries section #----- */
     public static final String SELECT_ALL_PRODUCTS = "SELECT * FROM main_products as MP INNER JOIN product_types AS PT ON MP.product_type_id = PT.type_id;";
 
-    public static final String SELECT_ONE_PRODUCT_BY_ID = "SELECT * FROM main_products as MP INNER JOIN product_types AS PT ON MP.product_type_id = PT.type_id WHERE MP.product_id = '%s';";
+    public static final String SELECT_ONE_PRODUCT_BY_ID = "SELECT * FROM main_products as MP INNER JOIN product_types AS PT ON MP.product_type_id = PT.type_id WHERE MP.product_id = ?;";
 
     public static final String ADD_PRODUCT_RECORD = "INSERT INTO main_products (product_id, product_name, product_type) VALUES (?, ?, ?);";
 

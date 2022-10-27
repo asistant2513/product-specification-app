@@ -20,7 +20,8 @@ public class ProductSpecApplication {
 
 	private static void prepareDatabase(final ApplicationContext context){
 		try {
-			boolean isDBReady = Boolean.getBoolean(context.getEnvironment().getProperty("datasource.isReady"));
+			var prop = context.getEnvironment().getProperty("datasource.isReady");
+			boolean isDBReady = Boolean.parseBoolean(prop);
 			if (!isDBReady) {
 				log.info("Database preparation required. Starting DB configuration");
 				context.getBean(DatabaseDataPreparationConfig.class).prepareDatabase(context);

@@ -47,8 +47,9 @@ public class ProductRepository implements SQLiteRepository<Product, String> {
     @Override
     public Product getOneByID(String id) {
         try (Connection c = connection.getConnection()) {
-            Statement st = c.createStatement();
-            ResultSet rs = st.executeQuery(String.format(SELECT_ONE_PRODUCT_BY_ID, id));
+            PreparedStatement st = c.prepareStatement(SELECT_ONE_PRODUCT_BY_ID);
+            st.setString(1, id);
+            ResultSet rs = st.executeQuery();
             return mapper.mapOne(rs);
         }
         catch (SQLException ex) {

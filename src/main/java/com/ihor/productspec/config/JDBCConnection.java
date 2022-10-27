@@ -15,11 +15,17 @@ public class JDBCConnection implements AutoCloseable {
     @Value("${datasource.url}")
     private String url;
 
+    @Value("${datasource.username}")
+    private String username;
+
+    @Value("${datasource.password}")
+    private String password;
+
     private Connection connection;
 
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url, username, password);
         }
         return connection;
     }

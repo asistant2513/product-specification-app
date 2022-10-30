@@ -33,59 +33,67 @@ public class ProductRepository implements SQLiteRepository<Product, String> {
 
     @Override
     public List<Product> getAll() {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             Statement st = c.createStatement();
             ResultSet rs = st.executeQuery(SELECT_ALL_PRODUCTS);
             return mapper.mapAll(rs);
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return null;
+        } finally {
+            connection.close();
         }
     }
 
     @Override
     public Product getOneByID(String id) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(SELECT_ONE_PRODUCT_BY_ID);
             st.setString(1, id);
             ResultSet rs = st.executeQuery();
             return mapper.mapOne(rs);
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return null;
+        } finally {
+            connection.close();
         }
     }
 
     @Override
     public int addOne(Product item) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(ADD_PRODUCT_RECORD);
             st.setString(1, item.getProductCode());
             st.setString(2, item.getProductName());
             st.setLong(3, item.getProductType().getTypeCode());
             return st.executeUpdate();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return 0;
+        } finally {
+            connection.close();
         }
     }
 
     @Override
     public Product update(Product item) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(UPDATE_PRODUCT_RECORD);
             st.setString(1, item.getProductName());
             st.setLong(2, item.getProductType().getTypeCode());
             st.setString(3, item.getProductCode());
             st.executeUpdate();
             return item;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return null;
+        } finally {
+            connection.close();
         }
     }
 
@@ -96,14 +104,16 @@ public class ProductRepository implements SQLiteRepository<Product, String> {
 
     @Override
     public int deleteOneByID(String id) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(DELETE_PRODUCT_RECORD);
             st.setString(1, id);
             return st.executeUpdate();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return 0;
+        } finally {
+            connection.close();
         }
     }
 }

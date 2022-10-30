@@ -20,11 +20,14 @@ import static com.ihor.productspec.util.JDBCConstants.SELECT_ALL_FIRST_LEVEL_USA
 @Slf4j
 public class ComponentRepository implements SQLiteComplexRepository <Component, String> {
 
-    @Autowired
-    private JDBCConnection connection;
+    private final JDBCConnection connection;
 
-    @Autowired
-    private ComponentMapper mapper;
+    private final ComponentMapper mapper;
+
+    public ComponentRepository(JDBCConnection connection, ComponentMapper mapper) {
+        this.connection = connection;
+        this.mapper = mapper;
+    }
 
     @Override
     public List<Component> getAllFirstLevelNodesById(String id) {
@@ -37,10 +40,11 @@ public class ComponentRepository implements SQLiteComplexRepository <Component, 
     }
 
     private List<Component> getResults(final String query) {
-        try (Connection c = connection.getConnection()) {
-            Statement st = c.createStatement();
-            ResultSet rs = st.executeQuery(query);
-            return mapper.mapAll(rs);
+        try (connection){
+            try (Statement st = connection.getConnection().createStatement()) {
+                ResultSet rs = st.executeQuery(query);
+                return mapper.mapAll(rs);
+            }
         }
         catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());

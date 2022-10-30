@@ -30,9 +30,10 @@ public final class DatabaseDataPreparationConfig {
                     log.debug("SQL script '{}' executed successfully", script.getFilename());
                 }
             }
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             log.error("Error during SQL connection : {}", exception.getMessage());
+        } finally {
+            connection.close();
         }
     }
 

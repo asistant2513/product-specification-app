@@ -31,14 +31,16 @@ public class SpecificationRepository implements SQLiteRepository<Specification, 
 
     @Override
     public List<Specification> getAll() {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             Statement st = c.createStatement();
             ResultSet rs = st.executeQuery(SELECT_ALL_SPECS);
             return mapper.mapAll(rs);
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return null;
+        } finally {
+            connection.close();
         }
     }
 
@@ -49,46 +51,52 @@ public class SpecificationRepository implements SQLiteRepository<Specification, 
 
     @Override
     public int addOne(Specification item) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(ADD_SPEC_RECORD);
             st.setString(1, item.getSourceProduct().getProductCode());
             st.setString(2, item.getTargetProduct().getProductCode());
             st.setLong(3, item.getQuantity());
             return st.executeUpdate();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return 0;
+        } finally {
+            connection.close();
         }
     }
 
     @Override
     public Specification update(Specification item) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(UPDATE_SPEC_RECORD);
             st.setLong(1, item.getQuantity());
             st.setString(2, item.getSourceProduct().getProductCode());
             st.setString(3, item.getTargetProduct().getProductCode());
             st.executeUpdate();
             return item;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return null;
+        } finally {
+            connection.close();
         }
     }
 
     @Override
     public int deleteOne(Specification item) {
-        try (Connection c = connection.getConnection()) {
+        try {
+            Connection c = connection.getConnection();
             PreparedStatement st = c.prepareStatement(DELETE_SPEC_RECORD);
             st.setString(1, item.getSourceProduct().getProductCode());
             st.setString(2, item.getTargetProduct().getProductCode());
             return st.executeUpdate();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             log.error("Exception occurred during connection: {}", ex.getMessage());
             return 0;
+        } finally {
+            connection.close();
         }
     }
 

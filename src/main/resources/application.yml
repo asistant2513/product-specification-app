@@ -1,5 +1,9 @@
 datasource:
   url: "jdbc:postgresql://localhost:5432/products"
-  username: "postgres"
-  password: "postgres"
+  username: "${DATASOURCE_USER}"
+  password: "${DATASOURCE_PWD}"
+  connection:
+    batchExecution:
+      ttl: 5
   isReady: "${DATASOURCE_READY}"
+

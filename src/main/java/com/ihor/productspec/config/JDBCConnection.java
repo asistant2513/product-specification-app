@@ -2,39 +2,67 @@ package com.ihor.productspec.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Component
+@Scope("session")
 @Slf4j
-public class JDBCConnection implements AutoCloseable {
+public final class JDBCConnection {
 
-    @Value("${datasource.url}")
-    private String url;
+    private final String url;
 
-    @Value("${datasource.username}")
-    private String username;
+    private final String username;
 
-    @Value("${datasource.password}")
-    private String password;
+    private final String password;
+
+    private final long connectionTTL;
+
+    private long connectionIssuedTimestamp;
 
     private Connection connection;
 
-    public Connection getConnection() throws SQLException {
+    public JDBCConnection(@Value("${datasource.url}") String url,
+                          @Value("${datasource.username}") String username,
+                          @Value("${datasource.password}") String password,
+                          @Value("${datasource.connection.batchExecution.ttl:30}") long connectionTTL) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.connectionTTL = connectionTTL;
+    }
+
+    private Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection(url, username, password);
+            connectionIssuedTimestamp = System.currentTimeMillis();
+            log.info("Connection for {} opened at {}", Thread.currentThread().getName(), connectionIssuedTimestamp);
         }
         return connection;
     }
 
-    @Override
-    public void close() throws Exception {
-        if (!connection.isClosed()){
-            connection.close();
+    public ResultSet executeQuery(@NonNull final String sql) throws SQLException{
+        try (var conn = getConnection()) {
+            try (var statement = conn.createStatement()) {
+                return statement.executeQuery(sql);
+            }
         }
-        log.info("Connection is closed");
+    }
+
+    public PreparedStatement getPreparedStatement(@NonNull final String sql) throws SQLException{
+        return getConnection().prepareStatement(sql);
+    }
+
+    public ResultSet executePreparedQuery(@NonNull final PreparedStatement statement) throws SQLException{
+        try (statement){
+            return statement.executeQuery();
+        } finally {
+            if(!connection.isClosed()) {
+                connection.close();
+            }
+        }
     }
 }

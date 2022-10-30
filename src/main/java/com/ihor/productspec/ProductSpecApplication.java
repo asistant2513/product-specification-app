@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+@SpringBootApplication
 @Slf4j
 public class ProductSpecApplication {
 

@@ -1,9 +1,8 @@
 package com.ihor.productspec.presentation;
 
 import com.ihor.productspec.model.ProductType;
-import com.ihor.productspec.repository.ProductTypeRepository;
+import com.ihor.productspec.service.ProductTypeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,34 +13,35 @@ import java.util.List;
 @RequestMapping("/productTypes")
 public class ProductTypeController {
 
-    @Autowired
-    private ProductTypeRepository repository;
+    private final ProductTypeService service;
+
+    public ProductTypeController(final ProductTypeService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<ProductType>> getAll() {
-        var result = repository.getAll();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductType> getById(@PathVariable("id") Long id) {
-        var result = repository.getOneByID(id);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PostMapping
-    public int add(@RequestBody final ProductType productType) {
-        return repository.addOne(productType);
+    public ResponseEntity<Integer> add(@RequestBody final ProductType productType) {
+        return ResponseEntity.ok(service.addOne(productType));
     }
 
     @PatchMapping
-    public ResponseEntity<ProductType> update(@RequestBody final ProductType productType) {
-        var result = repository.update(productType);
+    public ResponseEntity<Integer> update(@RequestBody final ProductType productType) {
+        var result = service.update(productType);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
-    public int delete(@PathVariable("id") final Long id) {
-        return repository.deleteOneByID(id);
+    public ResponseEntity<Integer> delete(@PathVariable("id") final Long id) {
+        return ResponseEntity.ok(service.deleteById(id));
     }
 }

@@ -1,5 +1,6 @@
-datasource:
-  url: "jdbc:postgresql://localhost:5432/products"
-  username: "postgres"
-  password: "postgres"
-  isReady: "${DATASOURCE_READY}"
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/products"
+    username: "postgres"
+    password: "postgres"
+    isReady: "${DATASOURCE_READY}"

@@ -3,7 +3,7 @@ package com.ihor.productspec.service;
 import com.ihor.productspec.model.DisentanglementModel;
 import com.ihor.productspec.model.Product;
 import com.ihor.productspec.model.Specification;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ihor.productspec.repository.DisentanglementRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,13 +13,33 @@ import java.util.stream.Collectors;
 @Service
 public class StructuralDisentanglementService {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private SpecificationService specificationService;
+    private final SpecificationService specificationService;
 
-    public List<DisentanglementModel> performStructuralDisentanglement() {
+    private final DisentanglementRepository disentanglementRepository;
+
+    public StructuralDisentanglementService(final ProductService productService,
+                                            final SpecificationService specificationService,
+                                            final DisentanglementRepository disentanglementRepository) {
+        this.productService = productService;
+        this.specificationService = specificationService;
+        this.disentanglementRepository = disentanglementRepository;
+    }
+
+    public List<DisentanglementModel> performStructuralDisentanglement(boolean saveToDb) {
+        var result = performStructuralDisentanglement();
+        if (saveToDb) {
+            saveAll(result);
+        }
+        return result;
+    }
+
+    private int[] saveAll(final List<DisentanglementModel> list) {
+        return disentanglementRepository.addAll(list);
+    }
+
+    private List<DisentanglementModel> performStructuralDisentanglement() {
         var result = initializeDisentanglementList();
         var productList = productService.getAll();
         var specificationsList = specificationService.getAll();

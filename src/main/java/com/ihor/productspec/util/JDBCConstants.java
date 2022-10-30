@@ -41,6 +41,7 @@ public final class JDBCConstants {
     public static final String UPDATE_SPEC_RECORD = "UPDATE product_spec SET quantity = ? WHERE source_product_id = ? AND target_product_id = ?;";
 
     public static final String DELETE_SPEC_RECORD = "DELETE FROM product_spec WHERE source_product_id = ? AND target_product_id = ?;";
+
     /* -----# Special queries section #----- */
     public static final String SELECT_ALL_FIRST_LEVEL_NODE_COMPONENTS_BY_ID = "SELECT " +
             "PS.target_product_id AS component_id, " +
@@ -59,4 +60,10 @@ public final class JDBCConstants {
             "INNER JOIN main_products AS MP " +
             "ON PS.source_product_id = MP.product_id " +
             "WHERE PS.target_product_id = ?;";
+
+    /* -----# Structural disentanglement queries section #----- */
+
+    public static final String INSERT_DISENTANGLEMENT_MODEL = "INSERT INTO structural_disentanglement " +
+            "(product_id, assembly_id, component_id, quantity, development_level, tree_level)" +
+            " VALUES (?, ?, ?, ?, ?, ?);";
 }

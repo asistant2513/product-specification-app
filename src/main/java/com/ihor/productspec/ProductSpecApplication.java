@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class ProductSpecApplication {
 
 	public static void main(String[] args) {
 		var context = SpringApplication.run(ProductSpecApplication.class, args);
-		prepareDatabase(context);
+		//prepareDatabase(context);
 	}
 
 	private static void prepareDatabase(final ApplicationContext context){

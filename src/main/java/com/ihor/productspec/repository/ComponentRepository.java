@@ -1,8 +1,8 @@
 package com.ihor.productspec.repository;
 
+import com.ihor.productspec.mapping.ComponentMapper;
 import com.ihor.productspec.model.Component;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,11 +11,27 @@ import static com.ihor.productspec.util.JDBCConstants.SELECT_ALL_FIRST_LEVEL_NOD
 import static com.ihor.productspec.util.JDBCConstants.SELECT_ALL_FIRST_LEVEL_USABILITY_COMPONENTS_BY_ID;
 
 @Repository
-public interface ComponentRepository {
+public class ComponentRepository {
 
-    @Query(SELECT_ALL_FIRST_LEVEL_NODE_COMPONENTS_BY_ID)
-    List<Component> getAllFirstLevelNodesById(@Param("productId") String id);
+    private final JdbcTemplate template;
 
-    @Query(SELECT_ALL_FIRST_LEVEL_USABILITY_COMPONENTS_BY_ID)
-    List<Component> getAllFirstLevelUsabilityById(@Param("productId") String id);
+    private final ComponentMapper mapper;
+
+    public ComponentRepository(final JdbcTemplate template,
+                               final ComponentMapper mapper) {
+        this.mapper = mapper;
+        this.template = template;
+    }
+
+    public List<Component> getAllFirstLevelNodesById(final String id) {
+        return template.query(SELECT_ALL_FIRST_LEVEL_NODE_COMPONENTS_BY_ID,
+                ps -> ps.setString(1, id),
+                mapper);
+    }
+
+    public List<Component> getAllFirstLevelUsabilityById(String id) {
+        return template.query(SELECT_ALL_FIRST_LEVEL_USABILITY_COMPONENTS_BY_ID,
+                ps -> ps.setString(1, id),
+                mapper);
+    }
 }

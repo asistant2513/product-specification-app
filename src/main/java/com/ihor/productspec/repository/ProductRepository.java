@@ -1,8 +1,8 @@
 package com.ihor.productspec.repository;
 
+import com.ihor.productspec.mapping.ProductMapper;
 import com.ihor.productspec.model.Product;
-import org.springframework.data.jdbc.repository.query.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,20 +15,46 @@ import static com.ihor.productspec.util.JDBCConstants.DELETE_PRODUCT_RECORD;
 
 
 @Repository
-public interface ProductRepository {
+public class ProductRepository {
 
-    @Query(SELECT_ALL_PRODUCTS)
-    List<Product> getAll();
+    private final JdbcTemplate template;
 
-    @Query(SELECT_ONE_PRODUCT_BY_ID)
-    Product getOneByID(@Param("productId") String id);
+    private final ProductMapper mapper;
 
-    @Query(ADD_PRODUCT_RECORD)
-    int addOne(@Param("productId") String id, @Param("productName") String name, @Param("productType") long typeId);
+    public ProductRepository(final JdbcTemplate template,
+                             final ProductMapper mapper) {
+        this.template = template;
+        this.mapper = mapper;
+    }
 
-    @Query(UPDATE_PRODUCT_RECORD)
-    int update(@Param("productId") String id, @Param("productName") String name, @Param("productType") long typeId);
+    public List<Product> getAll() {
+        return template.query(SELECT_ALL_PRODUCTS, mapper);
+    }
 
-    @Query(DELETE_PRODUCT_RECORD)
-    int deleteOneByID(@Param("productId") String id);
+    public Product getOneByID(final String id) {
+        return template.query(SELECT_ONE_PRODUCT_BY_ID,
+                ps -> ps.setString(1, id),
+                mapper).get(0);
+    }
+
+    public int addOne(final String id, final String name, long typeId) {
+        return template.update(ADD_PRODUCT_RECORD, ps -> {
+            ps.setString(1, id);
+            ps.setString(2, name);
+            ps.setLong(3, typeId);
+        });
+    }
+
+    int update(final String id, final String name, long typeId) {
+        return template.update(UPDATE_PRODUCT_RECORD, ps -> {
+            ps.setString(1, name);
+            ps.setLong(2, typeId);
+            ps.setString(3, id);
+        });
+    }
+
+    int deleteOneByID(final String id) {
+        return template.update(DELETE_PRODUCT_RECORD,
+                ps -> ps.setString(1, id));
+    }
 }

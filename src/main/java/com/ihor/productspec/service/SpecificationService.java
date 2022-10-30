@@ -16,13 +16,17 @@ public class SpecificationService {
         this.repository = repository;
     }
 
-    public List<Specification> getAllBySourceProductId(final String id){
+    public List<Specification> getAll() {
+        return repository.getAll();
+    }
+
+    public List<Specification> getAllBySourceProductId(final String id) {
         return repository.getAll().stream()
                 .filter(spec -> spec.getSourceProduct().getProductCode().equals(id))
                 .collect(Collectors.toList());
     }
 
-    public List<Specification> getAllByTargetProductId(final String id){
+    public List<Specification> getAllByTargetProductId(final String id) {
         return repository.getAll().stream()
                 .filter(spec -> spec.getTargetProduct().getProductCode().equals(id))
                 .collect(Collectors.toList());

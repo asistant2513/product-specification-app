@@ -1,11 +1,14 @@
 package com.ihor.productspec.service;
 
 import com.ihor.productspec.model.DisentanglementModel;
+import com.ihor.productspec.model.Product;
+import com.ihor.productspec.model.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StructuralDisentanglementService {
@@ -17,10 +20,13 @@ public class StructuralDisentanglementService {
     private SpecificationService specificationService;
 
     public List<DisentanglementModel> performStructuralDisentanglement() {
-        List<DisentanglementModel> result = initializeDisentanglementList();
+        var result = initializeDisentanglementList();
+        var productList = productService.getAll();
+        var specificationsList = specificationService.getAll();
+
         int level = 2;
         for (int i = 0; i < result.size(); i++) {
-            var currentComponent = productService.getById(result.get(i).getComponentId());
+            var currentComponent = getCurrentComponent(productList, result.get(i).getComponentId());
             if (currentComponent.getProductType().getTypeCode() == 1) {
                 level = 2;
             }
@@ -29,7 +35,7 @@ public class StructuralDisentanglementService {
                 level = 2;
                 continue;
             }
-            var componentSpecList = specificationService.getAllBySourceProductId(currentComponent.getProductCode());
+            var componentSpecList = getAllBySourceProductId(specificationsList, currentComponent.getProductCode());
             int shift = 1;
             for (var spec : componentSpecList) {
                 result.add(i + shift, DisentanglementModel.builder()
@@ -66,4 +72,15 @@ public class StructuralDisentanglementService {
         return list;
     }
 
+    private Product getCurrentComponent(final List<Product> list, final String id) {
+        return list.stream()
+                .filter(product -> product.getProductCode().equals(id))
+                .collect(Collectors.toList()).get(0);
+    }
+
+    private List<Specification> getAllBySourceProductId(final List<Specification> list, final String id) {
+        return list.stream()
+                .filter(spec -> spec.getSourceProduct().getProductCode().equals(id))
+                .collect(Collectors.toList());
+    }
 }

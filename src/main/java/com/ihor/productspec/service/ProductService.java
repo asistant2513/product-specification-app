@@ -16,6 +16,10 @@ public class ProductService {
         this.repository = repository;
     }
 
+    public List<Product> getAll() {
+        return repository.getAll();
+    }
+
     public Product getById(final String id){
         return repository.getOneByID(id);
     }

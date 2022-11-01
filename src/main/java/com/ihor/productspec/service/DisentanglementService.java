@@ -3,6 +3,7 @@ package com.ihor.productspec.service;
 import com.ihor.productspec.model.DisentanglementModel;
 import com.ihor.productspec.model.Product;
 import com.ihor.productspec.model.Specification;
+import com.ihor.productspec.model.TotalDisentanglementModel;
 import com.ihor.productspec.repository.DisentanglementRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class StructuralDisentanglementService {
+public class DisentanglementService {
 
     private final ProductService productService;
 
@@ -19,9 +20,9 @@ public class StructuralDisentanglementService {
 
     private final DisentanglementRepository disentanglementRepository;
 
-    public StructuralDisentanglementService(final ProductService productService,
-                                            final SpecificationService specificationService,
-                                            final DisentanglementRepository disentanglementRepository) {
+    public DisentanglementService(final ProductService productService,
+                                  final SpecificationService specificationService,
+                                  final DisentanglementRepository disentanglementRepository) {
         this.productService = productService;
         this.specificationService = specificationService;
         this.disentanglementRepository = disentanglementRepository;
@@ -62,7 +63,7 @@ public class StructuralDisentanglementService {
                         .productId(result.get(i).getProductId())
                         .assemblyId(spec.getSourceProduct().getProductCode())
                         .componentId(spec.getTargetProduct().getProductCode())
-                        .quantity(spec.getQuantity())
+                        .quantity(result.get(i).getQuantity() * spec.getQuantity())
                         .nodeLevel(level)
                         .treeNodeLevel(".".repeat(level) + level)
                         .build());
@@ -71,6 +72,10 @@ public class StructuralDisentanglementService {
             level++;
         }
         return result;
+    }
+
+    public List<TotalDisentanglementModel> getTotalDisentanglement() {
+        return disentanglementRepository.getTotalDisentanglement();
     }
 
     private List<DisentanglementModel> initializeDisentanglementList() {

@@ -66,4 +66,22 @@ public final class JDBCConstants {
     public static final String INSERT_DISENTANGLEMENT_MODEL = "INSERT INTO structural_disentanglement " +
             "(product_id, assembly_id, component_id, quantity, development_level, tree_level)" +
             " VALUES (?, ?, ?, ?, ?, ?);";
+
+    public static final String DELETE_ALL_DISENTANGLEMENT_MODELS = "DELETE FROM structural_disentanglement;";
+
+    public static final String SELECT_TOTAL_DISENTANGLEMENT_MODEL = "SELECT SUB.product_id, SUB.component_id," +
+            "SUB.total_component_quantity, SUB.max_development_level," +
+            "MP.product_type_id, PT.type_name" +
+            "FROM (" +
+            "SELECT SD.product_id, SD.component_id," +
+            "SUM(SD.quantity) AS total_component_quantity," +
+            "MAX(SD.development_level) AS max_development_level" +
+            "FROM structural_disentanglement AS SD" +
+            "GROUP BY SD.product_id, SD.component_id" +
+            ") AS SUB" +
+            "JOIN main_products AS MP" +
+            "ON SUB.component_id = MP.product_id" +
+            "JOIN product_types AS PT" +
+            "ON MP.product_type_id = PT.type_id" +
+            "ORDER BY SUB.product_id, SUB.component_id;";
 }

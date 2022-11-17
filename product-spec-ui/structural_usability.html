@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>
+        <b>Save result to database?</b>
+        <input type="radio" id="save-to-db-rb"/>
+    </p>
+    <p>
+        <button onclick="fetchData()">Perform structural disentanglement</button>
+    </p>
+
+    <table id="main-table" border="1px"></table>
+
+    <script>
+        const saveToDB = document.getElementById("save-to-db-rb").checked;
+
+        console.log(`Save to DB flag = ${saveToDB}`)
+
+        const url = `http://localhost:8080/usability/structural`;
+
+        const header = "<tr><th>Current component ID</th><th>Component ID</th><th>Assembly ID</th><th>Quantity</th><th>Level</th><th>Graph level</th></tr>";
+
+        document.getElementById("main-table").insertAdjacentHTML("afterbegin", header);
+
+        function fetchData(){
+            fetch(url, {method: "GET"})
+                .then((r) => r.json())
+                .then((result) => {                            
+                    for (let i = 0; i < result.length; i++) {
+                        document.getElementById("main-table")
+                                .insertAdjacentHTML("beforeend", 
+                                `<tr>
+                                    <td>${result[i]['currentComponent']}</td>
+                                    <td>${result[i]['componentId']}</td>
+                                    <td>${result[i]['assemblyId']}</td>
+                                    <td>${result[i]['quantity']}</td>
+                                    <td>${result[i]['nodeLevel']}</td>
+                                    <td>${result[i]['treeNodeLevel']}</td>
+                                    </tr>`);
+                    }
+                })
+                .catch((e) => console.log('Exception occured'));
+        }
+    </script>
+</body>
+</html>

@@ -84,4 +84,12 @@ public final class JDBCConstants {
             "JOIN product_types AS PT " +
             "ON MP.product_type_id = PT.type_id " +
             "ORDER BY SUB.product_id, SUB.component_id;";
+
+    public static final String SELECT_ALL_END_LEVEL_NODES_BY = "SELECT PS.target_product_id AS component_id, " +
+            "PS.source_product_id AS assembly_id, PS.quantity, MP.product_type_id AS type_id, " +
+            "PT.type_name AS type_name " +
+            "FROM product_spec AS PS " +
+            "JOIN main_products AS MP ON PS.target_product_id = MP.product_id " +
+            "JOIN product_types AS PT ON MP.product_type_id = PT.type_id " +
+            "WHERE MP.product_type_id IN (3,4);";
 }

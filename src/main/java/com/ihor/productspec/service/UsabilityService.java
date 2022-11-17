@@ -1,12 +1,8 @@
 package com.ihor.productspec.service;
 
-import com.ihor.productspec.model.DisentanglementModel;
 import com.ihor.productspec.model.Product;
 import com.ihor.productspec.model.Specification;
 import com.ihor.productspec.model.UsabilityModel;
-import com.ihor.productspec.repository.ProductRepository;
-import com.ihor.productspec.repository.SpecificationRepository;
-import com.ihor.productspec.repository.UsabilityRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,8 +44,6 @@ public class UsabilityService {
                         .nodeLevel(-1)
                         .treeNodeLevel("...")
                         .build());
-                if (spec.getSourceProduct().getProductType().getTypeCode() == 1)
-                    break;
                 shift++;
             }
         }

@@ -85,11 +85,31 @@ public final class JDBCConstants {
             "ON MP.product_type_id = PT.type_id " +
             "ORDER BY SUB.product_id, SUB.component_id;";
 
-    public static final String SELECT_ALL_END_LEVEL_NODES_BY = "SELECT PS.target_product_id AS component_id, " +
-            "PS.source_product_id AS assembly_id, PS.quantity, MP.product_type_id AS type_id, " +
-            "PT.type_name AS type_name " +
-            "FROM product_spec AS PS " +
-            "JOIN main_products AS MP ON PS.target_product_id = MP.product_id " +
-            "JOIN product_types AS PT ON MP.product_type_id = PT.type_id " +
-            "WHERE MP.product_type_id IN (3,4);";
+    public static final String INSERT_USABILITY_MODELS = "INSERT INTO structural_usability " +
+            "(product_id, component_id, assembly_id, quantity, development_level, tree_level)" +
+            " VALUES (?, ?, ?, ?, ?, ?);";
+
+    public static final String SELECT_STRUCTURAL_USABILITY = "SELECT SD.product_id, SD.component_id, SD.assembly_id, " +
+            "SD.quantity, " +
+            "SD.development_level, SD.tree_level " +
+            "FROM structural_disentanglement AS SD " +
+            "ORDER BY SD.product_id, SD.component_id, SD.assembly_id DESC;";
+
+    public static final String DELETE_ALL_STRUCTURAL_USABILITY_RECORDS = "DELETE FROM structural_usability;";
+
+    public static final String SELECT_TOTAL_USABILITY_RECORDS = "SELECT SUB.product_id, SUB.component_id, " +
+            "SUB.total_component_quantity, SUB.max_development_level, " +
+            "MP.product_type_id, PT.type_name " +
+            "FROM ( " +
+            "SELECT SU.product_id, SU.component_id, " +
+            "SUM(SU.quantity) AS total_component_quantity, " +
+            "MAX(SU.development_level) AS max_development_level " +
+            "FROM structural_usability AS SU  " +
+            "GROUP BY SU.product_id, SU.component_id " +
+            ") AS SUB " +
+            "JOIN main_products AS MP " +
+            "ON SUB.component_id = MP.product_id " +
+            "JOIN product_types AS PT " +
+            "ON MP.product_type_id = PT.type_id " +
+            "ORDER BY SUB.product_id, SUB.component_id;";
 }

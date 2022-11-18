@@ -9,7 +9,7 @@
 <body>
     <p>
         <b>Save result to database?</b>
-        <input type="radio" id="save-to-db-rb"/>
+        <input type="checkbox" id="save-to-db-rb"/>
     </p>
     <p>
         <button onclick="fetchData()">Perform structural disentanglement</button>
@@ -18,25 +18,23 @@
     <table id="main-table" border="1px"></table>
 
     <script>
-        const saveToDB = document.getElementById("save-to-db-rb").checked;
-
-        console.log(`Save to DB flag = ${saveToDB}`)
-
-        const url = `http://localhost:8080/usability/structural`;
-
-        const header = "<tr><th>Current component ID</th><th>Component ID</th><th>Assembly ID</th><th>Quantity</th><th>Level</th><th>Graph level</th></tr>";
+        const header = "<tr><th>Product ID</th><th>Component ID</th><th>Assembly ID</th><th>Quantity</th><th>Development level</th><th>Graph level</th></tr>";
 
         document.getElementById("main-table").insertAdjacentHTML("afterbegin", header);
 
         function fetchData(){
-            fetch(url, {method: "GET"})
+            const saveToDB = document.getElementById("save-to-db-rb").checked;
+            console.log(`Save to DB flag = ${saveToDB}`)
+            const url = `http://localhost:8080/usability/structural?saveToDB=${saveToDB}`;
+
+            fetch(url, {method: "POST"})
                 .then((r) => r.json())
-                .then((result) => {                            
+                .then((result) => {
                     for (let i = 0; i < result.length; i++) {
                         document.getElementById("main-table")
-                                .insertAdjacentHTML("beforeend", 
+                                .insertAdjacentHTML("beforeend",
                                 `<tr>
-                                    <td>${result[i]['currentComponent']}</td>
+                                    <td>${result[i]['productId']}</td>
                                     <td>${result[i]['componentId']}</td>
                                     <td>${result[i]['assemblyId']}</td>
                                     <td>${result[i]['quantity']}</td>
@@ -45,7 +43,7 @@
                                     </tr>`);
                     }
                 })
-                .catch((e) => console.log('Exception occured'));
+                .catch((e) => console.log('Exception occurred'));
         }
     </script>
 </body>

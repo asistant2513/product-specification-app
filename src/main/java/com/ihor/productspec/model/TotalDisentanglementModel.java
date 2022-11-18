@@ -8,14 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TotalDisentanglementModel {
-
     private String productId;
-
     private String componentId;
-
     private long totalQuantity;
-
     private int maxNodeLevel;
-
     private ProductType productType;
 }

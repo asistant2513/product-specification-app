@@ -1,11 +1,10 @@
 package com.ihor.productspec.presentation;
 
-import com.ihor.productspec.model.UsabilityModel;
+import com.ihor.productspec.model.DisentanglementModel;
+import com.ihor.productspec.model.TotalDisentanglementModel;
 import com.ihor.productspec.service.UsabilityService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +18,13 @@ public class UsabilityController {
         this.service = service;
     }
 
-    @GetMapping("/structural")
-    public ResponseEntity<List<UsabilityModel>> getStructuralUsability() {
-        return ResponseEntity.ok(service.performStructuralUsability());
+    @PostMapping("/structural")
+    public ResponseEntity<List<DisentanglementModel>> getStructuralUsability(@RequestParam("saveToDB") boolean save) {
+        return ResponseEntity.ok(service.performStructuralUsability(save));
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<List<TotalDisentanglementModel>> getTotalUsability() {
+        return ResponseEntity.ok(service.performTotalUsability());
     }
 }

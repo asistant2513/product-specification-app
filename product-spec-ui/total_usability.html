@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+</head>
+<body>
+<table id="main-table" border="1px"></table>
+<script>
+        const url = "http://localhost:8080/usability/total";
+
+        const header = "<tr><th>Product ID</th><th>Component ID</th><th>Total quantity</th><th>Max level</th><th>Product type</th></tr>";
+
+        document.getElementById("main-table").insertAdjacentHTML("afterbegin", header);
+
+        const result = fetch(url)
+                        .then((r) => r.json())
+                        .then((result) => {
+                            for (let i = 0; i < result.length; i++) {
+                                document.getElementById("main-table")
+                                        .insertAdjacentHTML("beforeend",
+                                        `<tr>
+                                            <td>${result[i]['productId']}</td>
+                                            <td>${result[i]['componentId']}</td>
+                                            <td>${result[i]['totalQuantity']}</td>
+                                            <td>${result[i]['maxNodeLevel']}</td>
+                                            <td>${result[i]['productType']["typeCode"]}</td>
+                                            </tr>`);
+                            }
+                        })
+                        .catch((e) => console.log('Exception occured'));
+    </script>
+</body>
+</html>

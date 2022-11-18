@@ -10,16 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DisentanglementModel {
-
     private String productId;
-
     private String assemblyId;
-
     private String componentId;
-
     private long quantity;
-
     private int nodeLevel;
-
     private String treeNodeLevel;
 }
